@@ -1,0 +1,11 @@
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    nip  BIGINT NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    role VARCHAR(100) NOT NULL,
+    password VARCHAR(100),
+    identity_card_images VARCHAR(100),
+    is_active BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
