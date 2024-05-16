@@ -4,7 +4,7 @@ CREATE TABLE patiens (
     phone_number VARCHAR(100) NOT NULL,
     birth_date VARCHAR(100) NOT NULL,
     gender VARCHAR(100) NOT NULL,
-    identity_card_images VARCHAR(100),
+    identity_card_scan_img VARCHAR(100),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

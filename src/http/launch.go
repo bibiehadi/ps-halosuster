@@ -2,6 +2,7 @@ package http
 
 import (
 	"fmt"
+	v1routes "halosuster/src/http/routes/v1"
 	"net/http"
 	"os"
 
@@ -36,12 +37,14 @@ func (r *Http) Launch() {
 		return c.HTML(http.StatusOK, fmt.Sprintf("API Base Code for %s", os.Getenv("ENVIRONMENT")))
 	})
 
-	// v1 := v1routes.New(
-	// 	&v1routes.V1Routes{
-	// 		Echo: e.Group(basePath),
-	// 		Db:   r.DB,
-	// 	},
-	// )
+	v1 := v1routes.New(
+		&v1routes.V1Routes{
+			Echo: e.Group(basePath),
+			Db:   r.DB,
+		},
+	)
+
+	v1.MountUser()
 
 	e.Logger.Fatal(e.Start(":8080"))
 }
