@@ -13,7 +13,7 @@ func (s *userService) Update(userId string, nurseUpdateRequest entities.NurseUpd
 		return findError
 	}
 
-	if s.userRepository.FindByNIP(nurseUpdateRequest.NIP) && user.NIP != nurseUpdateRequest.NIP {
+	if s.userRepository.NIPisExist(nurseUpdateRequest.NIP) && user.NIP != nurseUpdateRequest.NIP {
 		return errors.New("NIP ALREADY EXIST")
 	}
 

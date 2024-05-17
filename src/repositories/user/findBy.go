@@ -20,7 +20,7 @@ func (r *userRepository) FindById(userId string) (entities.User, error) {
 	return user, err
 }
 
-func (r *userRepository) FindByNIP(nip int) bool {
+func (r *userRepository) NIPisExist(nip int) bool {
 	var user entities.User
 	var query string = "SELECT id, nip, name, role, identity_card_scan_img, is_active FROM user WHERE nip = $1"
 	err := r.db.QueryRow(context.Background(), query, nip).Scan(&user.ID, &user.NIP, &user.Name, &user.Role, &user.IdentityCardScanImg, &user.IsActive)
