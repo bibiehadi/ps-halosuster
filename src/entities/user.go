@@ -35,6 +35,24 @@ type NurseResponse struct {
 	Name string `json:"name" validate:"required,min=5,max=50"`
 }
 
+type ITRequest struct {
+	NIP      int    `json:"nip" validate:"required"`
+	Name     string `json:"name" validate:"required,min=5,max=50"`
+	Password string `json:"password" validate:"required,min=5,max=33"`
+}
+
+type AuthRequest struct {
+	NIP      int    `json:"nip" validate:"required"`
+	Password string `json:"password" validate:"required,min=5,max=33"`
+}
+
+type AuthResponse struct {
+	ID          string `json:"userId" validate:"required"`
+	NIP         int    `json:"nip" validate:"required"`
+	Name        string `json:"name" validate:"required,min=5,max=50"`
+	AccessToken string `json:"accessToken" validate:"required"`
+}
+
 type UserQueryParams struct {
 	Id        string
 	Name      string
