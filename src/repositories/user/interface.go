@@ -11,6 +11,7 @@ type UserRepository interface {
 	GetAll(params entities.UserQueryParams) ([]entities.UserResponse, error)
 	FindById(userId string) (entities.User, error)
 	NIPisExist(nip int) bool
+	FindByNIP(nip int) (entities.User, error)
 	Update(userId string, user entities.User) error
 	Delete(userId string) error
 	Activate(userId string, password string) error
