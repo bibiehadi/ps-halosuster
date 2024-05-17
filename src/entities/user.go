@@ -17,7 +17,7 @@ type User struct {
 type NurseRequest struct {
 	NIP                 int    `json:"nip" validate:"required"`
 	Name                string `json:"name" validate:"required,min=5,max=50"`
-	IdentityCardScanImg string `json:"identityCardScanImg" validate:"required"`
+	IdentityCardScanImg string `json:"identityCardScanImg" validate:"required,url"`
 }
 
 type NurseUpdateRequest struct {
@@ -33,6 +33,23 @@ type NurseResponse struct {
 	ID   string `json:"userId" validate:"required"`
 	NIP  int    `json:"nip" validate:"required"`
 	Name string `json:"name" validate:"required,min=5,max=50"`
+}
+
+type UserQueryParams struct {
+	Id        string
+	Name      string
+	NIP       string
+	Role      string
+	CreatedAt string
+	Limit     int
+	Offset    int
+}
+
+type UserResponse struct {
+	ID        string    `json:"userId" validate:"required"`
+	NIP       int       `json:"nip" validate:"required"`
+	Name      string    `json:"name" validate:"required,min=5,max=50"`
+	CreatedAt time.Time `json:"createdAt"`
 }
 
 type Role string

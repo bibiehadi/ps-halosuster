@@ -72,6 +72,14 @@ func (controller *nurseController) Register(c echo.Context) error {
 		})
 	}
 
+	if !helpers.ValidateUrl(nurseRequest.IdentityCardScanImg) {
+		c.JSON(http.StatusBadRequest, entities.ErrorResponse{
+			Status:  false,
+			Message: "URL FORMAT IS NOT VALID",
+		})
+		return nil
+	}
+
 	nurse := entities.User{
 		NIP:                 nurseRequest.NIP,
 		Name:                nurseRequest.Name,
