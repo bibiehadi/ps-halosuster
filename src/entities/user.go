@@ -26,7 +26,7 @@ type NurseUpdateRequest struct {
 }
 
 type NurseActivate struct {
-	Password string `json:"password" validate:"required,min=5, max=33"`
+	Password string `json:"password" validate:"required,min=5,max=33"`
 }
 
 type NurseResponse struct {

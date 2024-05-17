@@ -17,10 +17,8 @@ func (controller *nurseController) Delete(c echo.Context) error {
 		})
 	}
 
-	return c.JSON(http.StatusOK, entities.SuccessResponse{
+	return c.JSON(http.StatusOK, entities.ErrorResponse{
+		Status:  true,
 		Message: "Nurse deleted successfull",
-		Data: entities.NurseResponse{
-			ID: userId,
-		},
 	})
 }

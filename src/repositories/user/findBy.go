@@ -10,7 +10,7 @@ import (
 
 func (r *userRepository) FindById(userId string) (entities.User, error) {
 	var user entities.User
-	var query string = "SELECT id, nip, name, role, identity_card_scan_img, is_active FROM user WHERE id = $1"
+	var query string = "SELECT id, nip, name, role, identity_card_scan_img, is_active FROM users WHERE id = $1"
 	err := r.db.QueryRow(context.Background(), query, userId).Scan(&user.ID, &user.NIP, &user.Name, &user.Role, &user.IdentityCardScanImg, &user.IsActive)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
@@ -21,11 +21,11 @@ func (r *userRepository) FindById(userId string) (entities.User, error) {
 }
 
 func (r *userRepository) NIPisExist(nip int) bool {
-	var user entities.User
-	var query string = "SELECT id, nip, name, role, identity_card_scan_img, is_active FROM user WHERE nip = $1"
-	err := r.db.QueryRow(context.Background(), query, nip).Scan(&user.ID, &user.NIP, &user.Name, &user.Role, &user.IdentityCardScanImg, &user.IsActive)
+	var exist string
+	var query string = "SELECT nip FROM users WHERE nip = $1 LIMIT 1"
+	err := r.db.QueryRow(context.Background(), query, nip).Scan(&exist)
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
+		if err == pgx.ErrNoRows {
 			return false
 		}
 	}

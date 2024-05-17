@@ -73,10 +73,8 @@ func (controller *nurseController) Activate(c echo.Context) error {
 		})
 	}
 
-	return c.JSON(http.StatusOK, entities.SuccessResponse{
+	return c.JSON(http.StatusOK, entities.ErrorResponse{
+		Status:  true,
 		Message: "Nurse activated successfull",
-		Data: entities.NurseResponse{
-			ID: userId,
-		},
 	})
 }
