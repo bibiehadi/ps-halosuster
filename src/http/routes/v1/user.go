@@ -14,4 +14,7 @@ func (i *V1Routes) MountUser() {
 	nurseController := nurseController.New(userService)
 
 	g.POST("/nurse/register", nurseController.Register)
+	g.PUT("/nurse/:id", nurseController.Update)
+	g.DELETE("/nurse/:id", nurseController.Delete)
+	g.DELETE("/nurse/:id/access", nurseController.Activate)
 }

@@ -11,6 +11,7 @@ type UserRepository interface {
 	FindById(userId string) (entities.User, error)
 	Update(userId string, user entities.User) error
 	Delete(userId string) error
+	Activate(userId string, password string) error
 }
 
 type userRepository struct {

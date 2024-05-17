@@ -9,6 +9,7 @@ type UserService interface {
 	Register(userRequest entities.User, isNurse bool) (entities.User, error)
 	Update(userId string, nurseUpdateRequest entities.NurseUpdateRequest) error
 	Delete(userId string) error
+	Activate(userId string, activateRequest entities.NurseActivate) error
 }
 
 type userService struct {
