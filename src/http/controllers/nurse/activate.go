@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"halosuster/src/entities"
-	"halosuster/src/helpers"
 	"io"
 	"net/http"
 
@@ -12,9 +11,10 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func (controller *nurseController) Register(c echo.Context) error {
-	var nurseRequest entities.NurseRequest
-	bindError := c.Bind(&nurseRequest)
+func (controller *nurseController) Activate(c echo.Context) error {
+	userId := c.Param("id")
+	var activateRequest entities.NurseActivate
+	bindError := c.Bind(&activateRequest)
 
 	if bindError != nil {
 		switch bindError.(type) {
@@ -54,7 +54,7 @@ func (controller *nurseController) Register(c echo.Context) error {
 		}
 	}
 
-	if err := controller.validator.Struct(nurseRequest); err != nil {
+	if err := controller.validator.Struct(activateRequest); err != nil {
 		var validationErrors []string
 		for _, err := range err.(validator.ValidationErrors) {
 			validationErrors = append(validationErrors, fmt.Sprintf("%s is %s", err.Field(), err.Tag()))
@@ -65,14 +65,7 @@ func (controller *nurseController) Register(c echo.Context) error {
 		})
 	}
 
-	if !helpers.ValidateNIP(nurseRequest.NIP, true) {
-		return c.JSON(http.StatusBadRequest, entities.ErrorResponse{
-			Status:  false,
-			Message: "INVALID FORMAT NURSE NIP",
-		})
-	}
-
-	user, err := controller.userService.Register(nurseRequest)
+	err := controller.userService.Activate(userId, activateRequest)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, entities.ErrorResponse{
 			Status:  false,
@@ -80,12 +73,8 @@ func (controller *nurseController) Register(c echo.Context) error {
 		})
 	}
 
-	return c.JSON(http.StatusCreated, entities.SuccessResponse{
-		Message: "Nurse registered successfull",
-		Data: entities.NurseResponse{
-			ID:   user.ID,
-			NIP:  user.NIP,
-			Name: user.Name,
-		},
+	return c.JSON(http.StatusOK, entities.ErrorResponse{
+		Status:  true,
+		Message: "Nurse activated successfull",
 	})
 }

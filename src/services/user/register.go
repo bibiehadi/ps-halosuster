@@ -1,15 +1,14 @@
 package userservice
 
-import "halosuster/src/entities"
+import (
+	"errors"
+	"halosuster/src/entities"
+)
 
-func (s *userService) Register(userRequest entities.NurseRequest) (entities.User, error) {
-	user := entities.User{
-		NIP:                 userRequest.NIP,
-		Name:                userRequest.Name,
-		IdentityCardScanImg: userRequest.IdentityCardScanImg,
-		Role:                entities.Role(entities.Nurse),
-		IsActive:            false,
+func (s *userService) Register(userRequest entities.User, isNurse bool) (entities.User, error) {
+	if s.userRepository.NIPisExist(userRequest.NIP) {
+		return entities.User{}, errors.New("NIP ALREADY EXIST")
 	}
 
-	return s.userRepository.Create(user)
+	return s.userRepository.Create(userRequest)
 }
