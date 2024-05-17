@@ -1,6 +1,7 @@
 package userservice
 
 import (
+	"errors"
 	"halosuster/src/entities"
 	"time"
 )
@@ -10,6 +11,10 @@ func (s *userService) Update(userId string, nurseUpdateRequest entities.NurseUpd
 
 	if findError != nil {
 		return findError
+	}
+
+	if s.userRepository.FindByNIP(nurseUpdateRequest.NIP) && user.NIP != nurseUpdateRequest.NIP {
+		return errors.New("NIP ALREADY EXIST")
 	}
 
 	nurse := entities.User{

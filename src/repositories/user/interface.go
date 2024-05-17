@@ -9,6 +9,7 @@ import (
 type UserRepository interface {
 	Create(user entities.User) (entities.User, error)
 	FindById(userId string) (entities.User, error)
+	FindByNIP(nip int) bool
 	Update(userId string, user entities.User) error
 	Delete(userId string) error
 	Activate(userId string, password string) error
