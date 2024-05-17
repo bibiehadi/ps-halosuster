@@ -12,9 +12,10 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func (controller *nurseController) Register(c echo.Context) error {
-	var nurseRequest entities.NurseRequest
-	bindError := c.Bind(&nurseRequest)
+func (controller *nurseController) Update(c echo.Context) error {
+	userId := c.Param("id")
+	var updateRequest entities.NurseUpdateRequest
+	bindError := c.Bind(&updateRequest)
 
 	if bindError != nil {
 		switch bindError.(type) {
@@ -54,7 +55,7 @@ func (controller *nurseController) Register(c echo.Context) error {
 		}
 	}
 
-	if err := controller.validator.Struct(nurseRequest); err != nil {
+	if err := controller.validator.Struct(updateRequest); err != nil {
 		var validationErrors []string
 		for _, err := range err.(validator.ValidationErrors) {
 			validationErrors = append(validationErrors, fmt.Sprintf("%s is %s", err.Field(), err.Tag()))
@@ -65,14 +66,14 @@ func (controller *nurseController) Register(c echo.Context) error {
 		})
 	}
 
-	if !helpers.ValidateNIP(nurseRequest.NIP, true) {
+	if !helpers.ValidateNIP(updateRequest.NIP, true) {
 		return c.JSON(http.StatusBadRequest, entities.ErrorResponse{
 			Status:  false,
 			Message: "INVALID FORMAT NURSE NIP",
 		})
 	}
 
-	user, err := controller.userService.Register(nurseRequest)
+	err := controller.userService.Update(userId, updateRequest)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, entities.ErrorResponse{
 			Status:  false,
@@ -80,12 +81,12 @@ func (controller *nurseController) Register(c echo.Context) error {
 		})
 	}
 
-	return c.JSON(http.StatusCreated, entities.SuccessResponse{
-		Message: "Nurse registered successfull",
+	return c.JSON(http.StatusOK, entities.SuccessResponse{
+		Message: "Nurse data updated successfull",
 		Data: entities.NurseResponse{
-			ID:   user.ID,
-			NIP:  user.NIP,
-			Name: user.Name,
+			ID:   userId,
+			NIP:  updateRequest.NIP,
+			Name: updateRequest.Name,
 		},
 	})
 }

@@ -20,6 +20,11 @@ type NurseRequest struct {
 	IdentityCardScanImg string `json:"identityCardScanImg" validate:"required"`
 }
 
+type NurseUpdateRequest struct {
+	NIP  int    `json:"nip" validate:"required"`
+	Name string `json:"name" validate:"required,min=5,max=50"`
+}
+
 type NurseResponse struct {
 	ID   string `json:"userId" validate:"required"`
 	NIP  int    `json:"nip" validate:"required"`
