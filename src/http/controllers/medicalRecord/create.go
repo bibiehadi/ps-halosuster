@@ -3,13 +3,14 @@ package v1medicalrecord
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/go-playground/validator/v10"
-	"github.com/labstack/echo/v4"
 	"halosuster/src/entities"
 	"halosuster/src/helpers"
 	"io"
 	"net/http"
 	"strconv"
+
+	"github.com/go-playground/validator/v10"
+	"github.com/labstack/echo/v4"
 )
 
 func (controller *MedicalRecordController) CreateMedicalRecord(c echo.Context) error {
