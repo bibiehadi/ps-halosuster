@@ -10,6 +10,25 @@ import (
 func (r *medicalRecordRepository) GetAllMedicalRecord(params entities.MedicalRecordQueryParams) ([]entities.MedicalRecordResponse, error) {
 	var query string = "SELECT o.id AS transactionId, o.customer_id AS customerId, od.product_id AS productId, od.quantity AS quantity, o.paid AS paid, o.change AS change, o.created_at AS createdAt FROM orders o INNER JOIN order_details od ON o.id = od.order_id "
 	conditions := ""
+	//SELECT
+	//  p.identity_number AS identityNumber, -- Assuming "identity_number" exists in patients table
+	//  p.phone_number AS phoneNumber,
+	//  p.name,
+	//  p.birth_date AS birthDate,
+	//  p.gender,
+	//  p.identity_card_scan_img AS identityCardScanImg,
+	//  m.symptoms,
+	//  m.medications,
+	//  m.created_at,
+	//  u.nip,
+	//  u.name AS created_by_name,
+	//  u.user_id
+	//FROM
+	//  patients p
+	//INNER JOIN medical_records m ON p.id = m.patient_id
+	//INNER JOIN users u ON m.created_by = u.id
+	//-- Specify your filtering condition here (e.g., WHERE p.id = specific_id)
+	//ORDER BY m.created_at DESC;
 
 	// Filter by ID
 	if params.CustomerId != "" {
