@@ -7,7 +7,7 @@ import (
 
 type MedicalRecordRepository interface {
 	GetAllMedicalRecord(params entities.MedicalRecordQueryParams) ([]entities.MedicalRecordResponse, error)
-	GetMedicalRecordById(id int) (entities.MedicalRecord, error)
+	//GetMedicalRecordById(id int) (entities.MedicalRecord, error)
 	CreateMedicalRecord(medicalRecord entities.MedicalRecordRequest) (entities.MedicalRecord, error)
 }
 

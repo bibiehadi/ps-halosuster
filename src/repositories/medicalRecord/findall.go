@@ -1,6 +1,7 @@
 package medicalrecordrepository
 
 import (
+	"context"
 	"fmt"
 	"halosuster/src/entities"
 	"strconv"
@@ -8,31 +9,18 @@ import (
 )
 
 func (r *medicalRecordRepository) GetAllMedicalRecord(params entities.MedicalRecordQueryParams) ([]entities.MedicalRecordResponse, error) {
-	var query string = "SELECT o.id AS transactionId, o.customer_id AS customerId, od.product_id AS productId, od.quantity AS quantity, o.paid AS paid, o.change AS change, o.created_at AS createdAt FROM orders o INNER JOIN order_details od ON o.id = od.order_id "
+	var query string = "SELECT patients.id , patients.phone_number, patients.name, patients.birth_date, patients.gender, patients.identity_card_scan_img, medical_records.sympthoms, medical_records.medications, medical_records.created_at, users.nip, users.name , users.id FROM patients INNER JOIN medical_records ON patients.id = medical_records.patient_id INNER JOIN users ON medical_records.created_by = users.id "
 	conditions := ""
-	//SELECT
-	//  p.identity_number AS identityNumber, -- Assuming "identity_number" exists in patients table
-	//  p.phone_number AS phoneNumber,
-	//  p.name,
-	//  p.birth_date AS birthDate,
-	//  p.gender,
-	//  p.identity_card_scan_img AS identityCardScanImg,
-	//  m.symptoms,
-	//  m.medications,
-	//  m.created_at,
-	//  u.nip,
-	//  u.name AS created_by_name,
-	//  u.user_id
-	//FROM
-	//  patients p
-	//INNER JOIN medical_records m ON p.id = m.patient_id
-	//INNER JOIN users u ON m.created_by = u.id
-	//-- Specify your filtering condition here (e.g., WHERE p.id = specific_id)
-	//ORDER BY m.created_at DESC;
 
 	// Filter by ID
-	if params.CustomerId != "" {
-		conditions += " customer_id = '" + params.CustomerId + "' AND"
+	if string(params.IdentityNumber) != "" {
+		conditions += " patiens.id = '" + string(params.IdentityNumber) + "' AND"
+	}
+	if params.UserId != "" {
+		conditions += " users.id = '" + params.UserId + "' AND"
+	}
+	if params.NIP != "" {
+		conditions += " users.nip = '" + params.NIP + "' AND"
 	}
 	if conditions != "" {
 		conditions = " WHERE " + strings.TrimSuffix(conditions, " AND")
@@ -40,12 +28,12 @@ func (r *medicalRecordRepository) GetAllMedicalRecord(params entities.MedicalRec
 	query += conditions
 	var orderBy []string
 	if params.CreatedAt != "" {
-		orderBy = append(orderBy, "o.created_at "+params.CreatedAt)
+		orderBy = append(orderBy, "medical_records.created_at "+params.CreatedAt)
 	}
 	if len(orderBy) > 0 {
 		query += " ORDER BY " + strings.Join(orderBy, ", ")
 	} else {
-		query += " ORDER BY o.created_at DESC"
+		query += " ORDER BY medical_records.created_at DESC"
 	}
 
 	query += " LIMIT " + strconv.Itoa(params.Limit) + " OFFSET " + strconv.Itoa(params.Offset)
@@ -55,20 +43,20 @@ func (r *medicalRecordRepository) GetAllMedicalRecord(params entities.MedicalRec
 
 	if err != nil {
 		fmt.Println(err.Error())
-		return []entities.HistoryResponse{}, err
+		return []entities.MedicalRecordResponse{}, err
 	}
 	defer rows.Close()
-	var Histories []entities.HistoryResponse
+	var MedicalRecords []entities.MedicalRecordResponse
 	for rows.Next() {
-		var history entities.HistoryResponse
-		err := rows.Scan(&history.TransactionId, &history.CustomerId, &history.ProductDetails.ProductId, &history.ProductDetails.Quantity, &history.Paid, &history.Change, &history.CreatedAt)
+		var medicalRecord entities.MedicalRecordResponse
+		err := rows.Scan(&medicalRecord.IdentityDetail.IdentityNumber, &medicalRecord.IdentityDetail.PhoneNumber, &medicalRecord.IdentityDetail.Name, &medicalRecord.IdentityDetail.BirthDate, &medicalRecord.IdentityDetail.Gender, &medicalRecord.IdentityDetail.IdentityCardScanImg, &medicalRecord.Sympthoms, &medicalRecord.Medications, &medicalRecord.CreatedAt, &medicalRecord.CreatedBy.Nip, &medicalRecord.CreatedBy.Nip, &medicalRecord.CreatedBy.UserId)
 		if err != nil {
-			return []entities.HistoryResponse{}, err
+			return []entities.MedicalRecordResponse{}, err
 		}
-		Histories = append(Histories, history)
+		MedicalRecords = append(MedicalRecords, medicalRecord)
 	}
 
-	fmt.Println(Histories)
-	return Histories, nil
+	fmt.Println(MedicalRecords)
+	return MedicalRecords, nil
 
 }
