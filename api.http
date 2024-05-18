@@ -1,0 +1,13 @@
+@url = http://localhost:8080/v1
+###
+POST {{url}}/medical/patient
+Content-Type: application/json
+
+{
+	"identityNumber": 1234567890123456,
+	"phoneNumber": "+62123123123",
+	"name": "John Doe",
+	"birthDate": "2000-01-01T00:00:00Z",
+	"gender": "male",
+	"identityCardScanImg": "https://example.com/image.jpg"
+}
