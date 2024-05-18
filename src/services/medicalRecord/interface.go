@@ -6,7 +6,7 @@ import (
 )
 
 type MedicalRecordService interface {
-	CreateMedicalRecord(medicalRecordRequest entities.MedicalRecordRequest) (entities.MedicalRecordResponse, error)
+	CreateMedicalRecord(medicalRecordRequest entities.MedicalRecordRequest) (entities.MedicalRecord, error)
 	GetAll(params entities.MedicalRecordQueryParams) ([]entities.MedicalRecordResponse, error)
 }
 

@@ -45,6 +45,6 @@ func (r *Http) Launch() {
 	)
 
 	v1.MountUser()
-
+	v1.MountMedicalRecords()
 	e.Logger.Fatal(e.Start(":8080"))
 }
