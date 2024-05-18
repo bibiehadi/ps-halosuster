@@ -1,5 +1,7 @@
 package entities
 
+import "time"
+
 type Patient struct {
 	IdentityNumber      int64  `json:"identityNumber" validate:"required"`
 	PhoneNumber         string `json:"phoneNumber" validate:"required,min=10,max=15,e164"`
@@ -19,10 +21,9 @@ type PatientQueryParams struct {
 }
 
 type PatientResponse struct {
-	IdentityNumber int64  `json:"identityNumber" validate:"required,len=16"`
-	PhoneNumber    string `json:"phoneNumber" validate:"required,e164,min=10,max=15"`
-	Name           string `json:"name" validate:"required,min=3,max=30"`
-	BirthDate      string `json:"birthDate" validate:"required,datetime=2006-01-02"`
-	Gender         string `json:"gender" validate:"required,oneof=male female"`
-	CreatedAt      string `json:"createdAt" validate:"required,datetime=2006-01-02T15:04:05Z07:00"`
+	IdentityNumber string    `json:"identityNumber"`
+	PhoneNumber    string    `json:"phoneNumber"`
+	Name           string    `json:"name"`
+	BirthDate      string    `json:"birthDate"`
+	CreatedAt      time.Time `json:"createdAt"`
 }

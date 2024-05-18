@@ -8,10 +8,8 @@ import (
 
 type PatientRepository interface {
 	Create(user entities.Patient) (entities.Patient, error)
-	// GetAll(params entities.PatientQueryParams) ([]entities.PatientResponse, error)
-	// FindById(userId string) (entities.User, error)
+	FindAll(params entities.PatientQueryParams) ([]entities.PatientResponse, error)
 	IDisExist(patientId int64) bool
-	// Update(userId string, user entities.User) error
 }
 
 type patientRepository struct {

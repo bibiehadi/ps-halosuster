@@ -15,4 +15,5 @@ func (i *V1Routes) MountPatient() {
 	patientController := patientController.New(patientService)
 
 	g.POST("", patientController.Create)
+	g.GET("", patientController.FindAll)
 }
