@@ -42,7 +42,7 @@ func (controller *nurseController) GetAll(c echo.Context) error {
 		params.Offset = 0
 	}
 
-	if id := c.QueryParam("id"); id != "" {
+	if id := c.QueryParam("userId"); id != "" {
 		params.Id = id
 	}
 
@@ -66,7 +66,7 @@ func (controller *nurseController) GetAll(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, entities.ErrorResponse{
 			Status:  false,
-			Message: "Failed to fetch products",
+			Message: "Failed to fetch users",
 		})
 	}
 

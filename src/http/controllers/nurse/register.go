@@ -7,6 +7,7 @@ import (
 	"halosuster/src/helpers"
 	"io"
 	"net/http"
+	"strconv"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
@@ -65,10 +66,17 @@ func (controller *nurseController) Register(c echo.Context) error {
 		})
 	}
 
-	if !helpers.ValidateNIP(nurseRequest.NIP, true) {
+	if !helpers.ValidateNIP(nurseRequest.NIP) {
 		return c.JSON(http.StatusBadRequest, entities.ErrorResponse{
 			Status:  false,
 			Message: "INVALID FORMAT NURSE NIP",
+		})
+	}
+
+	if strconv.Itoa(nurseRequest.NIP)[0:3] != "303" {
+		return c.JSON(http.StatusNotFound, entities.ErrorResponse{
+			Status:  false,
+			Message: "INVALID NIP FORMAT",
 		})
 	}
 
@@ -90,6 +98,13 @@ func (controller *nurseController) Register(c echo.Context) error {
 
 	user, err := controller.userService.Register(nurse, true)
 	if err != nil {
+		if err.Error() == "NIP ALREADY EXIST" {
+			return c.JSON(http.StatusConflict, entities.ErrorResponse{
+				Status:  false,
+				Message: err.Error(),
+			})
+		}
+
 		return c.JSON(http.StatusBadRequest, entities.ErrorResponse{
 			Status:  false,
 			Message: err.Error(),

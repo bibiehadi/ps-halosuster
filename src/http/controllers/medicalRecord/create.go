@@ -1,22 +1,20 @@
-package nursecontroller
+package v1medicalrecord
 
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/go-playground/validator/v10"
+	"github.com/labstack/echo/v4"
 	"halosuster/src/entities"
 	"halosuster/src/helpers"
 	"io"
 	"net/http"
 	"strconv"
-
-	"github.com/go-playground/validator/v10"
-	"github.com/labstack/echo/v4"
 )
 
-func (controller *nurseController) Update(c echo.Context) error {
-	userId := c.Param("id")
-	var updateRequest entities.NurseUpdateRequest
-	bindError := c.Bind(&updateRequest)
+func (controller *MedicalRecordController) CreateMedicalRecord(c echo.Context) error {
+	var medicalRecordReq entities.MedicalRecordRequest
+	bindError := c.Bind(&medicalRecordReq)
 
 	if bindError != nil {
 		switch bindError.(type) {
@@ -56,7 +54,7 @@ func (controller *nurseController) Update(c echo.Context) error {
 		}
 	}
 
-	if err := controller.validator.Struct(updateRequest); err != nil {
+	if err := controller.validator.Struct(medicalRecordReq); err != nil {
 		var validationErrors []string
 		for _, err := range err.(validator.ValidationErrors) {
 			validationErrors = append(validationErrors, fmt.Sprintf("%s is %s", err.Field(), err.Tag()))
@@ -67,41 +65,25 @@ func (controller *nurseController) Update(c echo.Context) error {
 		})
 	}
 
-	if !helpers.ValidateNIP(updateRequest.NIP) {
-		return c.JSON(http.StatusBadRequest, entities.ErrorResponse{
-			Status:  false,
-			Message: "INVALID FORMAT NURSE NIP",
-		})
-	}
+	userId, _ := helpers.GetUserIDFromJWTClaims(c)
 
-	if strconv.Itoa(updateRequest.NIP)[0:3] != "303" {
-		return c.JSON(http.StatusNotFound, entities.ErrorResponse{
-			Status:  false,
-			Message: "INVALID NIP FORMAT",
-		})
-	}
-
-	err := controller.userService.Update(userId, updateRequest)
+	medicalRecordReq.CreatedBy = strconv.Itoa(userId)
+	medicalRecord, err := controller.medicalRecordService.CreateMedicalRecord(medicalRecordReq)
 	if err != nil {
-		if err.Error() == "THIS USER IS NOT NURSE" {
-			return c.JSON(http.StatusNotFound, entities.ErrorResponse{
+		return c.JSON(
+			http.StatusBadRequest,
+			entities.ErrorResponse{
 				Status:  false,
 				Message: err.Error(),
-			})
-		}
+			},
+		)
 
-		return c.JSON(http.StatusBadRequest, entities.ErrorResponse{
-			Status:  false,
-			Message: err.Error(),
-		})
 	}
-
-	return c.JSON(http.StatusOK, entities.SuccessResponse{
-		Message: "Nurse data updated successfull",
-		Data: entities.NurseResponse{
-			ID:   userId,
-			NIP:  updateRequest.NIP,
-			Name: updateRequest.Name,
+	return c.JSON(
+		http.StatusCreated,
+		entities.SuccessResponse{
+			Message: "success",
+			Data:    medicalRecord,
 		},
-	})
+	)
 }
