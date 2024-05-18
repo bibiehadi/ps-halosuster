@@ -7,6 +7,7 @@ import (
 
 type UserService interface {
 	Register(userRequest entities.User, isNurse bool) (entities.User, error)
+	Login(authRequest entities.AuthRequest) (string, entities.User, error)
 	GetAll(params entities.UserQueryParams) ([]entities.UserResponse, error)
 	Update(userId string, nurseUpdateRequest entities.NurseUpdateRequest) error
 	Delete(userId string) error
