@@ -53,6 +53,7 @@ func (controller *patientController) Create(c echo.Context) error {
 
 		}
 	}
+	fmt.Println(123)
 
 	if err := controller.validator.Struct(patientRequest); err != nil {
 		var validationErrors []string
@@ -64,6 +65,7 @@ func (controller *patientController) Create(c echo.Context) error {
 			Message: validationErrors,
 		})
 	}
+	fmt.Println(1234)
 
 	if !helpers.ValidateUrl(patientRequest.IdentityCardScanImg) {
 		c.JSON(http.StatusBadRequest, entities.ErrorResponse{
@@ -72,6 +74,7 @@ func (controller *patientController) Create(c echo.Context) error {
 		})
 		return nil
 	}
+	fmt.Println(12345)
 
 	patient, err := controller.patientService.Create(patientRequest)
 	if err != nil {

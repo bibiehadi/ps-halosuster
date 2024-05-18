@@ -7,11 +7,11 @@ import (
 )
 
 func (i *V1Routes) MountPatient() {
-	g := i.Echo.Group("/patient")
+	g := i.Echo.Group("/medical/patient")
 
 	patientRepository := patientrepository.New(i.Db)
 	patientService := patientservice.New(patientRepository)
 	patientController := patientController.New(patientService)
 
-	g.POST("/patient/register", patientController.Create)
+	g.POST("", patientController.Create)
 }
