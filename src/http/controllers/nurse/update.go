@@ -103,6 +103,7 @@ func (controller *nurseController) Update(c echo.Context) error {
 		})
 	}
 
+	//success update (test ci/cd)
 	return c.JSON(http.StatusOK, entities.SuccessResponse{
 		Message: "Nurse data updated successfull",
 		Data: entities.NurseResponse{
