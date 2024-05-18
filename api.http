@@ -11,3 +11,5 @@ Content-Type: application/json
 	"gender": "male",
 	"identityCardScanImg": "https://example.com/image.jpg"
 }
+###
+GET {{url}}/medical/patient?limit=10&name=j

@@ -1,8 +1,9 @@
 package medicalrecordrepository
 
 import (
-	"github.com/jackc/pgx/v5/pgxpool"
 	"halosuster/src/entities"
+
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type MedicalRecordRepository interface {
