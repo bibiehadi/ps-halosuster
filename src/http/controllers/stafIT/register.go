@@ -7,6 +7,7 @@ import (
 	"halosuster/src/helpers"
 	"io"
 	"net/http"
+	"strconv"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
@@ -65,8 +66,15 @@ func (controller *stafItController) Register(c echo.Context) error {
 		})
 	}
 
-	if !helpers.ValidateNIP(stafITRequest.NIP, false) {
+	if !helpers.ValidateNIP(stafITRequest.NIP) {
 		return c.JSON(http.StatusBadRequest, entities.ErrorResponse{
+			Status:  false,
+			Message: "INVALID NIP FORMAT",
+		})
+	}
+
+	if strconv.Itoa(stafITRequest.NIP)[0:3] != "615" {
+		return c.JSON(http.StatusNotFound, entities.ErrorResponse{
 			Status:  false,
 			Message: "INVALID NIP FORMAT",
 		})
@@ -79,10 +87,15 @@ func (controller *stafItController) Register(c echo.Context) error {
 		Role:     entities.IT,
 		IsActive: true,
 	}
-	fmt.Println("PASSWORD")
-	fmt.Println(stafITRequest.Password)
 	user, err := controller.userService.Register(stafIT, false)
 	if err != nil {
+		if err.Error() == "NIP ALREADY EXIST" {
+			return c.JSON(http.StatusConflict, entities.ErrorResponse{
+				Status:  false,
+				Message: err.Error(),
+			})
+		}
+
 		return c.JSON(http.StatusBadRequest, entities.ErrorResponse{
 			Status:  false,
 			Message: err.Error(),
