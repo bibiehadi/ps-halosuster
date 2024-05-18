@@ -66,7 +66,7 @@ func (controller *nurseController) GetAll(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, entities.ErrorResponse{
 			Status:  false,
-			Message: "Failed to fetch products",
+			Message: "Failed to fetch users",
 		})
 	}
 
