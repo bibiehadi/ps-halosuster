@@ -12,6 +12,7 @@ type V1Routes struct {
 
 type iV1Routes interface {
 	MountUser()
+	MountMedicalRecords()
 	MountPatient()
 }
 
