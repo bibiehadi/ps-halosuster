@@ -17,6 +17,10 @@ func (s *userService) Update(userId string, nurseUpdateRequest entities.NurseUpd
 		return errors.New("NIP ALREADY EXIST")
 	}
 
+	if user.Role != "nurse" {
+		return errors.New("THIS USER IS NOT NURSE")
+	}
+
 	nurse := entities.User{
 		ID:                  user.ID,
 		NIP:                 nurseUpdateRequest.NIP,

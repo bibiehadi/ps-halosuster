@@ -42,7 +42,7 @@ func (controller *nurseController) GetAll(c echo.Context) error {
 		params.Offset = 0
 	}
 
-	if id := c.QueryParam("id"); id != "" {
+	if id := c.QueryParam("userId"); id != "" {
 		params.Id = id
 	}
 

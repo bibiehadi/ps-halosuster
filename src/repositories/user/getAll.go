@@ -12,7 +12,7 @@ func (r *userRepository) GetAll(params entities.UserQueryParams) ([]entities.Use
 	var query string = "SELECT id, nip, name, created_at FROM users"
 
 	conditions := ""
-
+	fmt.Println(params.Id)
 	if params.Id != "" {
 		conditions += " id = '" + params.Id + "' AND"
 	}
@@ -23,7 +23,7 @@ func (r *userRepository) GetAll(params entities.UserQueryParams) ([]entities.Use
 	}
 
 	if params.NIP != "" {
-		conditions += " nip LIKE '" + params.NIP + "%' AND"
+		conditions += " CAST(nip AS VARCHAR(100)) LIKE '" + params.NIP + "%' AND"
 	}
 
 	if params.Role != "" {
