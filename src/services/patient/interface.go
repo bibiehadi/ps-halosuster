@@ -6,6 +6,7 @@ import (
 )
 
 type PatientService interface {
+	IDisExist(patientId int64) bool
 	Create(patient entities.Patient) (entities.Patient, error)
 	// GetAll(params entities.PatientQueryParams) ([]entities.PatientResponse, error)
 	// Update(patientId string, nurseUpdateRequest entities.NurseUpdateRequest) error

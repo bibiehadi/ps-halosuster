@@ -7,6 +7,7 @@ import (
 	"halosuster/src/helpers"
 	"io"
 	"net/http"
+	"regexp"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
@@ -53,7 +54,6 @@ func (controller *patientController) Create(c echo.Context) error {
 
 		}
 	}
-	fmt.Println(123)
 
 	if err := controller.validator.Struct(patientRequest); err != nil {
 		var validationErrors []string
@@ -65,7 +65,23 @@ func (controller *patientController) Create(c echo.Context) error {
 			Message: validationErrors,
 		})
 	}
-	fmt.Println(1234)
+
+	if matched, _ := regexp.MatchString(`^\d{16}$`, fmt.Sprint(patientRequest.IdentityNumber)); !matched {
+		c.JSON(http.StatusBadRequest, entities.ErrorResponse{
+			Status:  false,
+			Message: "IDENTITY NUMBER FORMAT IS NOT VALID",
+		})
+		return nil
+	}
+
+	idExists := controller.patientService.IDisExist(patientRequest.IdentityNumber)
+	if idExists {
+		c.JSON(http.StatusConflict, entities.ErrorResponse{
+			Status:  false,
+			Message: "IDENTITY NUMBER ALREADY EXIST",
+		})
+		return nil
+	}
 
 	if !helpers.ValidateUrl(patientRequest.IdentityCardScanImg) {
 		c.JSON(http.StatusBadRequest, entities.ErrorResponse{
@@ -74,7 +90,6 @@ func (controller *patientController) Create(c echo.Context) error {
 		})
 		return nil
 	}
-	fmt.Println(12345)
 
 	patient, err := controller.patientService.Create(patientRequest)
 	if err != nil {
@@ -86,9 +101,6 @@ func (controller *patientController) Create(c echo.Context) error {
 
 	return c.JSON(http.StatusCreated, entities.SuccessResponse{
 		Message: "Patient registered successfull",
-		Data: entities.PatientResponse{
-			IdentityNumber: patient.IdentityNumber,
-			Name:           patient.Name,
-		},
+		Data:    patient,
 	})
 }
