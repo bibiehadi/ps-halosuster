@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-
 	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
 )
@@ -20,6 +19,16 @@ func RequireAuth() echo.MiddlewareFunc {
 					Message: "Unauthorized",
 				})
 			}
+
+			// parts := strings.SplitN(authHeader, " ", 2)
+			// if len(parts) != 2 || strings.ToLower(parts[0]) != "bearer" {
+			// 	return echo.NewHTTPError(http.StatusUnauthorized, "Invalid authorization format")
+			// }
+			// if authHeader == "" || !strings.HasPrefix(authHeader, "Bearer ") {
+			// 	c.JSON(http.StatusUnauthorized, echo.Map{"error": "missing or malformed Authorization header"})
+			// 	return nil
+			// }
+
 			// Extract the token from the header
 			tokenString := strings.TrimPrefix(authHeader, "Bearer ")
 			// Parse the JWT token
@@ -41,4 +50,33 @@ func RequireAuth() echo.MiddlewareFunc {
 			return next(c)
 		}
 	}
+	// Get the Authorization header value
+
+	// Check if the header is empty or doesn't start with "Bearer "
+
+}
+
+func AuthWithRole(role string) echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			}
+			// parts := strings.SplitN(authHeader, " ", 2)
+			// if len(parts) != 2 || strings.ToLower(parts[0]) != "bearer" {
+			// 	return echo.NewHTTPError(http.StatusUnauthorized, "Invalid authorization format")
+			// }
+			// if authHeader == "" || !strings.HasPrefix(authHeader, "Bearer ") {
+			// 	c.JSON(http.StatusUnauthorized, echo.Map{"error": "missing or malformed Authorization header"})
+			// 	return nil
+			// }
+			claims := c.Get("jwtClaims").(jwt.MapClaims)
+			if claims["role"] != role {
+				return c.JSON(http.StatusUnauthorized, entities.ErrorResponse{
+					Status:  false,
+					Message: "Unauthorized",
+				})
+			}
+			return next(c)
+		}
+	}
+
 }

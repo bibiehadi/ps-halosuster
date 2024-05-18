@@ -23,8 +23,9 @@ func (s *userService) Login(authRequest entities.AuthRequest) (string, entities.
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"sub": user.NIP,
-		"exp": time.Now().Add(time.Hour * 8).Unix(),
+		"sub":  user.NIP,
+		"role": user.Role,
+		"exp":  time.Now().Add(time.Hour * 8).Unix(),
 	})
 
 	tokenString, err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
