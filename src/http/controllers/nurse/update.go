@@ -83,6 +83,13 @@ func (controller *nurseController) Update(c echo.Context) error {
 
 	err := controller.userService.Update(userId, updateRequest)
 	if err != nil {
+		if err.Error() == "NIP ALREADY EXIST" {
+			return c.JSON(http.StatusConflict, entities.ErrorResponse{
+				Status:  false,
+				Message: err.Error(),
+			})
+		}
+
 		if err.Error() == "THIS USER IS NOT NURSE" {
 			return c.JSON(http.StatusNotFound, entities.ErrorResponse{
 				Status:  false,
@@ -96,6 +103,7 @@ func (controller *nurseController) Update(c echo.Context) error {
 		})
 	}
 
+	//success update (test ci/cd)
 	return c.JSON(http.StatusOK, entities.SuccessResponse{
 		Message: "Nurse data updated successfull",
 		Data: entities.NurseResponse{
