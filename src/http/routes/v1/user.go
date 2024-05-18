@@ -16,7 +16,7 @@ func (i *V1Routes) MountUser() {
 	nurseController := nurseController.New(userService)
 	itController := itController.New(userService)
 
-	g.GET("", nurseController.GetAll)
+	g.GET("", nurseController.GetAll, middlewares.RequireAuth())
 
 	g.POST("/it/register", itController.Register)
 	g.POST("/it/login", itController.Login)

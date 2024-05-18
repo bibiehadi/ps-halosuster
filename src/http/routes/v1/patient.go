@@ -9,10 +9,10 @@ import (
 
 func (i *V1Routes) MountPatient() {
 	g := i.Echo.Group("/medical/patient")
-
+	g.Use(middlewares.RequireAuth())
 	patientRepository := patientrepository.New(i.Db)
 	patientService := patientservice.New(patientRepository)
 	patientController := patientController.New(patientService)
 
-	g.POST("", patientController.Create, middlewares.RequireAuth())
+	g.POST("", patientController.Create)
 }

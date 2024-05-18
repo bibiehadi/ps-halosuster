@@ -18,7 +18,7 @@ func (s *userService) Login(authRequest entities.AuthRequest) (string, entities.
 		return "", entities.User{}, errors.New("INVALID NIP OR PASSWORD")
 	}
 
-	if helpers.CompareHashAndPassword(user.Password, authRequest.Password) {
+	if !helpers.CompareHashAndPassword(user.Password, authRequest.Password) {
 		return "", entities.User{}, errors.New("INVALID NIP OR PASSWORD")
 	}
 
