@@ -9,12 +9,13 @@ import (
 )
 
 func (r *medicalRecordRepository) GetAllMedicalRecord(params entities.MedicalRecordQueryParams) ([]entities.MedicalRecordResponse, error) {
-	var query string = "SELECT patients.id , patients.phone_number, patients.name, patients.birth_date, patients.gender, patients.identity_card_scan_img, medical_records.sympthoms, medical_records.medications, medical_records.created_at, users.nip, users.name , users.id FROM patients INNER JOIN medical_records ON patients.id = medical_records.patient_id INNER JOIN users ON medical_records.created_by = users.id "
+	var query string = "SELECT patiens.identity_number , patiens.phone_number, patiens.name, patiens.birth_date, patiens.gender, patiens.identity_card_scan_img, medical_records.sympthoms, medical_records.medications, medical_records.created_at, users.nip, users.name , users.id FROM patiens INNER JOIN medical_records ON patiens.identity_number = medical_records.patien_id INNER JOIN users ON medical_records.created_by = users.id "
 	conditions := ""
 
 	// Filter by ID
-	if string(params.IdentityNumber) != "" {
-		conditions += " patiens.id = '" + string(params.IdentityNumber) + "' AND"
+	fmt.Println("params", strconv.Itoa(params.IdentityNumber))
+	if params.IdentityNumber != 0 {
+		conditions += " patiens.identity_number = '" + string(params.IdentityNumber) + "' AND"
 	}
 	if params.UserId != "" {
 		conditions += " users.id = '" + params.UserId + "' AND"
@@ -49,7 +50,9 @@ func (r *medicalRecordRepository) GetAllMedicalRecord(params entities.MedicalRec
 	var MedicalRecords []entities.MedicalRecordResponse
 	for rows.Next() {
 		var medicalRecord entities.MedicalRecordResponse
-		err := rows.Scan(&medicalRecord.IdentityDetail.IdentityNumber, &medicalRecord.IdentityDetail.PhoneNumber, &medicalRecord.IdentityDetail.Name, &medicalRecord.IdentityDetail.BirthDate, &medicalRecord.IdentityDetail.Gender, &medicalRecord.IdentityDetail.IdentityCardScanImg, &medicalRecord.Sympthoms, &medicalRecord.Medications, &medicalRecord.CreatedAt, &medicalRecord.CreatedBy.Nip, &medicalRecord.CreatedBy.Nip, &medicalRecord.CreatedBy.UserId)
+		err := rows.Scan(&medicalRecord.IdentityDetail.IdentityNumber, &medicalRecord.IdentityDetail.PhoneNumber, &medicalRecord.IdentityDetail.Name, &medicalRecord.IdentityDetail.BirthDate, &medicalRecord.IdentityDetail.Gender, &medicalRecord.IdentityDetail.IdentityCardScanImg, &medicalRecord.Sympthoms, &medicalRecord.Medications, &medicalRecord.CreatedAt, &medicalRecord.CreatedBy.Nip, &medicalRecord.CreatedBy.Name, &medicalRecord.CreatedBy.UserId)
+		fmt.Println("error", err)
+		fmt.Println("medical record", medicalRecord)
 		if err != nil {
 			return []entities.MedicalRecordResponse{}, err
 		}

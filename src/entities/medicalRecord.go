@@ -1,5 +1,7 @@
 package entities
 
+import "time"
+
 type MedicalRecord struct {
 	ID          int     `json:"id"`
 	PatientID   Patient `json:"patient_id"`
@@ -30,7 +32,7 @@ type MedicalRecordResponse struct {
 	IdentityDetail IdentityDetail `json:"identityDetail"`
 	Sympthoms      string         `json:"sympthoms"`
 	Medications    string         `json:"medications"`
-	CreatedAt      string         `json:"createdAt"`
+	CreatedAt      time.Time      `json:"createdAt"`
 	CreatedBy      CreatedBy      `json:"createdBy"`
 }
 
