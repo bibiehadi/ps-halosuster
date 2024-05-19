@@ -2,9 +2,11 @@ package helpers
 
 import (
 	"errors"
+	"fmt"
 	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
 	"os"
+	"strconv"
 )
 
 func GetUserIDFromJWTClaims(c echo.Context) (int, error) {
@@ -21,13 +23,13 @@ func GetUserIDFromJWTClaims(c echo.Context) (int, error) {
 	}
 
 	// Ambil nilai userID dari JWT claims
-	userIDFloat, exists := claims["sub"].(float64)
-	if !exists {
+	userID, err := strconv.Atoi(claims["sub"].(string))
+	fmt.Print("user id float", userID)
+	if err != nil {
 		return 0, errors.New("userID not found in JWT claims")
 	}
 
 	// Konversi nilai userID dari float64 ke int
-	userID := int(userIDFloat)
 
 	return userID, nil
 }

@@ -3,20 +3,25 @@ package v1medicalrecord
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/go-playground/validator/v10"
+	"github.com/labstack/echo/v4"
 	"halosuster/src/entities"
 	"halosuster/src/helpers"
 	"io"
 	"net/http"
 	"strconv"
-
-	"github.com/go-playground/validator/v10"
-	"github.com/labstack/echo/v4"
 )
 
 func (controller *MedicalRecordController) CreateMedicalRecord(c echo.Context) error {
 	var medicalRecordReq entities.MedicalRecordRequest
+	fmt.Println("masuk create medical record", medicalRecordReq)
 	bindError := c.Bind(&medicalRecordReq)
+	fmt.Println("bind error", bindError)
 
+	userId, _ := helpers.GetUserIDFromJWTClaims(c)
+
+	medicalRecordReq.CreatedBy = strconv.Itoa(userId)
+	fmt.Println("medical record req", medicalRecordReq)
 	if bindError != nil {
 		switch bindError.(type) {
 		case validator.ValidationErrors:
@@ -65,10 +70,23 @@ func (controller *MedicalRecordController) CreateMedicalRecord(c echo.Context) e
 			Message: validationErrors,
 		})
 	}
+	fmt.Println("identity number", len(strconv.Itoa(medicalRecordReq.IdentityNumber)))
+	if len(strconv.Itoa(medicalRecordReq.IdentityNumber)) < 16 || len(strconv.Itoa(medicalRecordReq.IdentityNumber)) > 16 {
+		return c.JSON(http.StatusBadRequest, entities.ErrorResponse{
+			Status:  false,
+			Message: "identityNumber must be 16 characters",
+		})
 
-	userId, _ := helpers.GetUserIDFromJWTClaims(c)
+	}
 
-	medicalRecordReq.CreatedBy = strconv.Itoa(userId)
+	patient := controller.patientService.IDisExist(int64(medicalRecordReq.IdentityNumber))
+	if !patient {
+		return c.JSON(http.StatusNotFound, entities.ErrorResponse{
+			Status:  false,
+			Message: "identityNumber is not exist",
+		})
+	}
+
 	medicalRecord, err := controller.medicalRecordService.CreateMedicalRecord(medicalRecordReq)
 	if err != nil {
 		return c.JSON(
