@@ -1,7 +1,7 @@
 CREATE TABLE medical_records (
     id SERIAL PRIMARY KEY,
     patien_id BIGINT NOT NULL,
-    sympthoms VARCHAR NOT NULL,
+    symptoms VARCHAR NOT NULL,
     medications VARCHAR NOT NULL,
     created_by INT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
