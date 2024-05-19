@@ -2,9 +2,10 @@ package helpers
 
 import (
 	"errors"
+	"os"
+
 	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
-	"os"
 )
 
 func GetUserIDFromJWTClaims(c echo.Context) (int, error) {

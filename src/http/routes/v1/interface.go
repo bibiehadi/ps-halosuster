@@ -14,6 +14,7 @@ type iV1Routes interface {
 	MountUser()
 	MountMedicalRecords()
 	MountPatient()
+	MountUpload()
 }
 
 func New(v1Routes *V1Routes) iV1Routes {
