@@ -9,7 +9,7 @@ import (
 )
 
 func (r *patientRepository) FindAll(params entities.PatientQueryParams) ([]entities.PatientResponse, error) {
-	var query string = "SELECT identity_number, phone_number, name, birth_date, created_at FROM patiens "
+	var query string = "SELECT identity_number, phone_number, name, birth_date, gender, created_at FROM patiens "
 	conditions := ""
 
 	// Filter by ID
@@ -51,7 +51,7 @@ func (r *patientRepository) FindAll(params entities.PatientQueryParams) ([]entit
 	var Patients []entities.PatientResponse
 	for rows.Next() {
 		var patient entities.PatientResponse
-		err := rows.Scan(&patient.IdentityNumber, &patient.PhoneNumber, &patient.Name, &patient.BirthDate, &patient.CreatedAt)
+		err := rows.Scan(&patient.IdentityNumber, &patient.PhoneNumber, &patient.Name, &patient.BirthDate, &patient.Gender, &patient.CreatedAt)
 		fmt.Println(err)
 		if err != nil {
 			return []entities.PatientResponse{}, err
