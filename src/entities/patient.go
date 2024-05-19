@@ -21,7 +21,7 @@ type PatientQueryParams struct {
 }
 
 type PatientResponse struct {
-	IdentityNumber string    `json:"identityNumber"`
+	IdentityNumber int64     `json:"identityNumber"`
 	PhoneNumber    string    `json:"phoneNumber"`
 	Name           string    `json:"name"`
 	BirthDate      string    `json:"birthDate"`
