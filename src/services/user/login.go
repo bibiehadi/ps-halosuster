@@ -22,8 +22,9 @@ func (s *userService) Login(authRequest entities.AuthRequest) (string, entities.
 		return "", entities.User{}, errors.New("INVALID NIP OR PASSWORD")
 	}
 
+	fmt.Println("user id", user.ID)
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"sub":  user.NIP,
+		"sub":  user.ID,
 		"role": user.Role,
 		"exp":  time.Now().Add(time.Hour * 8).Unix(),
 	})
